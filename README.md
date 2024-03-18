@@ -60,6 +60,13 @@ We evaluate the model performance on the zero-shot classification task using the
 ```bash
 python eval_caco.py --task zs --model_path <path_to_model>
 ```
+<center>
+
+| UrbanSound8K| ESC-50|TUTAS2017 |VGGSound-test| 
+|:------:|:------:|:-----:|:------:|
+|0.934| 0.771| 0.486|0.271|
+
+</center>
 
 ### 3. Audio Captioning
 
@@ -73,7 +80,7 @@ Our environment does not support the HEAR benchmark, but we provide the code to 
 
 
 #### *HEAR Benchmark Results
-For easy comparison, we provide the numbers for the HEAR benchmark. The numbers are taken from the [LAION-CLAP](https://arxiv.org/abs/2211.06687), [MS-CLAP](https://arxiv.org/abs/2206.04769), [WavCaps-CNN14](https://arxiv.org/abs/2303.17395), and [WavCaps-HTSAT](https://arxiv.org/abs/2303.17395) papers.
+For easy comparison, we provide the numbers for the HEAR benchmark, comparing with [LAION-CLAP](https://arxiv.org/abs/2211.06687), [MS-CLAP](https://arxiv.org/abs/2206.04769), [WavCaps-CNN14](https://arxiv.org/abs/2303.17395), and [WavCaps-HTSAT](https://arxiv.org/abs/2303.17395) papers.
 
 <center>
 
