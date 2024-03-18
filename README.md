@@ -2,7 +2,7 @@
 Inference codebase for "Cacophony: An Improved Contrastive Audio-Text Model"
 
 ## Abstract
-Despite recent improvements in audio-text modeling, audio-text contrastive models still lag behind their image-text counterparts in scale and performance. We propose a method to improve both the scale and the training of audio-text contrastive models. Specifically, we craft a large-scale audio-text dataset consisting of over 13,000 hours of text-labeled audio, aided by large language model (LLM) processing and audio captioning. Further, we employ an masked autoencoder (MAE) pre-pretraining phase with random patch dropout, which allows us to both scale unlabeled audio datasets and train efficiently with variable length audio. After MAE pre-pretraining of our audio encoder, we train a contrastive model with an auxiliary captioning objective. Our final model, which we name Cacophony, achieves state-of-the-art performance on audio-text retrieval tasks, and exhibits competitive results on other downstream tasks such as zero-shot classification.
+We propose a method to improve both the scale and the training of audio-text contrastive models. Specifically, we craft a large-scale audio-text dataset consisting of over 13,000 hours of text-labeled audio, aided by large language model (LLM) processing and audio captioning. Further, we employ an masked autoencoder (MAE) pre-pretraining phase with random patch dropout, which allows us to both scale unlabeled audio datasets and train efficiently with variable length audio. After MAE pre-pretraining of our audio encoder, we train a contrastive model with an auxiliary captioning objective.
 
 <br>
 <p align="center">
@@ -33,7 +33,7 @@ We provide the following pretrained models on both stages of the Cacophony model
 
 ## Evaluation Results
 
-The evaluation step involves [AudioCaps](https://audiocaps.github.io/), [Clotho](https://github.com/audio-captioning/clotho-dataset), [UrbanSound8K](https://urbansounddataset.weebly.com/urbansound8k.html), [ESC-50](https://github.com/karolpiczak/ESC-50[), [TUT Acoustic Scene 2017](https://zenodo.org/records/400515) and [VGGSound-test](https://www.robots.ox.ac.uk/~vgg/data/vggsound/) datasets. Since our model is trained on audio sampled at 16kHz, we first downsample all of the audio from the above datasets to match with the training stage.
+The evaluation datasets involves [HEAR benchmark](https://hearbenchmark.com/) [AudioCaps](https://audiocaps.github.io/), [Clotho](https://github.com/audio-captioning/clotho-dataset), [UrbanSound8K](https://urbansounddataset.weebly.com/urbansound8k.html), [ESC-50](https://github.com/karolpiczak/ESC-50[), [TUT Acoustic Scene 2017](https://zenodo.org/records/400515) and [VGGSound-test](https://www.robots.ox.ac.uk/~vgg/data/vggsound/) datasets. Since our model is trained on audio sampled at 16kHz, we first downsample all of the audio from the above datasets to match with the training stage.
 
 ### 1. Audio-Text Retrieval
 
@@ -80,7 +80,7 @@ Our environment does not support the HEAR benchmark, but we provide the code to 
 
 
 #### *HEAR Benchmark Results
-For easy comparison, we provide the numbers for the HEAR benchmark, comparing with [LAION-CLAP](https://arxiv.org/abs/2211.06687), [MS-CLAP](https://arxiv.org/abs/2206.04769), [WavCaps-CNN14](https://arxiv.org/abs/2303.17395), and [WavCaps-HTSAT](https://arxiv.org/abs/2303.17395) papers.
+To complement the radar chart in the paper, we present the accuracy numbers for the HEAR benchmark alongside those of other baseline models including [LAION-CLAP](https://arxiv.org/abs/2211.06687), [MS-CLAP](https://arxiv.org/abs/2206.04769), [WavCaps-CNN14](https://arxiv.org/abs/2303.17395), and [WavCaps-HTSAT](https://arxiv.org/abs/2303.17395).
 
 <center>
 
@@ -104,3 +104,5 @@ Their support has been invaluable.
 We thank the FreeSound team from Pompeu Fabra University for providing us with the scraping API.
 We thank the University of Rochester Goergen Institute for Data Science (GIDS) seed funding program.
 We thank LAION CLAP team for collecting open source datesets and generously sharing them with the research community.
+
+## References
