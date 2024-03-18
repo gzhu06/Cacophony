@@ -48,10 +48,9 @@ Reproducible results for the Audio-Text retrieval task are as follows:
 
 | | |Text-to-Audio| | |Audio-to-Text| | 
 |:------:|:------:|:------:|:-----:|:------:|:------:|:-----:|
-| AudioCaps|R@1|R@5|R@10|R@1|R@5|R@10|
-|Cacophony |0.410| 0.753| 0.864|0.553|0.836|0.924|
-|Clotho|R@1|R@5|R@10|R@1|R@5| R@10|
-|Cacophony|0.202| 0.459| 0.588|0.265|0.541|0.762|
+| |R@1|R@5|R@10|R@1|R@5|R@10|
+|AudioCaps |0.410| 0.753| 0.864|0.553|0.836|0.924|
+|Clotho|0.202| 0.459| 0.588|0.265|0.541|0.762|
 
 </center>
 
