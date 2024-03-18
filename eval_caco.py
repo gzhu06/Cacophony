@@ -9,7 +9,6 @@ from typing import Any
 from tqdm import tqdm
 import soundfile as sf
 import numpy as np
-import json
 
 from src.caco.load_model import load_caco
 from src.caco.caco import CACO, decode
@@ -17,7 +16,6 @@ from src.caco.dataset import Batch, DatasetConfig, _dataset_process_map, _tokeni
 from src.caco.caco_eval_utils import load_from_list
 
 from retrieval_utils import compute_retrieval_metric
-import dataset_processors
 from dataset_processors import *
 
 parser = argparse.ArgumentParser()
@@ -99,7 +97,7 @@ def load_audio(audio_path, dataset_sampling_rate):
 
 def prepare_audio_batch(audiowav, audio_description, datasetconfig):
 
-    data_dict = load_from_list(audiowav, audio_description, ast=True if 'ast/' in ckpt_path else False)
+    data_dict = load_from_list(audiowav, audio_description)
     d_ = _dataset_process_map(data_dict, [0, 1], datasetconfig)
     d = {}
     for d_item in d_:
@@ -328,11 +326,7 @@ if __name__ == "__main__":
         # 2) rank the top text embeddings on the given audio embedding
         #######################################
 
-        eval_data_processors = [item for item in dir(dataset_processors) if item.endswith('Processor')]
-        eval_data_processors.remove('DatasetProcessor')
-        eval_data_processors.remove('AudioCaps16kProcessor')
-        eval_data_processors.remove('Clotho16kProcessor')
-
+        eval_data_processors = ['ESC50Processor', 'TUTAS2017Processor', 'US8KProcessor', 'VGGSoundProcessor']
         CommondataConfig = DatasetConfig(batch_size=1,
                                          patches_seq_len=(100 * 10 * 8// 16) , # 10 second
                                          time_patch_size=16,
@@ -342,21 +336,14 @@ if __name__ == "__main__":
         
         ## dataset config definition
         total_acc = {}
-        for data_processor_name in tqdm(eval_data_processors[:]):
+        for data_processor_name in tqdm(eval_data_processors[-1:]):
             print('Processing:', data_processor_name, '........')
             data_processor = globals()[data_processor_name]()
-
-            if data_processor_name == 'TUTAS2017Processor':
-                text_prefix = 'This is a sound on '
-            else:
-                text_prefix = 'This is a sound of '
+            
+            text_prefix = 'This is a sound on ' if data_processor_name == 'TUTAS2017Processor' else 'This is a sound of '
 
             acc1 = zs_classification(data_processor, CommondataConfig, text_prefix=text_prefix)
             total_acc[data_processor_name] = acc1
-
-        # save json file
-        with open(args.ckpt_path + '_zs_classification.json', 'w') as fp:
-            json.dump(total_acc, fp)
         
     elif args.task == 'ar':
     

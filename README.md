@@ -19,20 +19,62 @@ pip install requirements.txt
 
 ## Pretrained Models
 We provide the following pretrained models on both stages of the Cacophony model:
-### AudioMAE
+### Stage 1: AudioMAE
+[link](https://drive.google.com/), Model detail: 
+* Audio Encoder: parameters
+* Audio Decoder: parameters
 
-### Cacophony
 
-## Evaluation
-### Audio-Text Retrieval
+### Stage 2: Cacophony
+[link](https://drive.google.com/), Model detail:
+* Audio Encoder: parameters,
+* Text Encoder: parameters,
 
-### Zero-Shot Classification
 
-### Audio Captioning
+## Evaluation Results
 
-### HEAR Benchmark
+The evaluation step involves [AudioCaps](https://audiocaps.github.io/), [Clotho](https://github.com/audio-captioning/clotho-dataset), [UrbanSound8K](https://urbansounddataset.weebly.com/urbansound8k.html), [ESC-50](https://github.com/karolpiczak/ESC-50[), [TUT Acoustic Scene 2017](https://zenodo.org/records/400515) and [VGGSound-test](https://www.robots.ox.ac.uk/~vgg/data/vggsound/) datasets. Since our model is trained on audio sampled at 16kHz, we first downsample all of the audio from the above datasets to match with the training stage.
+
+### 1. Audio-Text Retrieval
+
+We evaluate the model performance Audio-Text retrieval task using the [AudioCaps](https://audiocaps.github.io/) dataset and [Clotho](https://github.com/audio-captioning/clotho-dataset) dataset.
+
+```bash
+python eval_caco.py --task ar --model_path <path_to_model>
+```
+
+Reproducible results for the Audio-Text retrieval task are as follows:
+<center>
+
+| | |Text-to-Audio| | |Audio-to-Text| | 
+|:------:|:------:|:------:|:-----:|:------:|:------:|:-----:|
+| AudioCaps|R@1|R@5|R@10|R@1|R@5|R@10|
+|Cacophony |0.410| 0.753| 0.864|0.553|0.836|0.924|
+|Clotho|R@1|R@5|R@10|R@1|R@5| R@10|
+|Cacophony|0.202| 0.459| 0.588|0.265|0.541|0.762|
+
+</center>
+
+### 2. Zero-Shot Classification
+We evaluate the model performance on the zero-shot classification task using the [UrbanSound8K](https://urbansounddataset.weebly.com/urbansound8k.html), [ESC-50](https://github.com/karolpiczak/ESC-50[),[TUT Acoustic Scene 2017](https://zenodo.org/records/400515) and [VGGSound-test](https://www.robots.ox.ac.uk/~vgg/data/vggsound/) datasets. Note that, upon our evaluation, we found that some of the audio from the VGGSound-test dataset is not publicly available anymore, and we were unable to evaluate our model on the full dataset. Instead we evaluate on 12,722 samples.
+
+```bash
+python eval_caco.py --task zs --model_path <path_to_model>
+```
+
+### 3. Audio Captioning
+
+```bash
+python eval_caco.py --task caption --model_path <path_to_model>
+```
+
+### 4. HEAR Benchmark
 
 Our environment does not support the HEAR benchmark, but we provide the code to run the benchmark in the `hear` directory. To successfully run the benchmark, follow the instructions in the `hear` directory.
+
+
+#### *HEAR Benchmark Results
+For easy comparison, we provide the numbers for the HEAR benchmark. The numbers are taken from the [LAION-CLAP](https://arxiv.org/abs/2211.06687), [MS-CLAP](https://arxiv.org/abs/2206.04769), [WavCaps-CNN14](https://arxiv.org/abs/2303.17395), and [WavCaps-HTSAT](https://arxiv.org/abs/2303.17395) papers.
 
 <center>
 
@@ -45,7 +87,14 @@ Our environment does not support the HEAR benchmark, but we provide the code to 
 |[WavCaps-HTSAT](https://arxiv.org/abs/2303.17395)|0.961| 0.690| 0.595| **0.929**| 0.752|0.806|0.234| 0.168| 0.256| 0.548|0.847| 0.962| 0.958|
 |Stage1: AudioMAE (Ours)|0.841| **0.754**|**0.661**| 0.893| **0.841**|**0.893**| **0.439**| 0.161| **0.700**|**0.827**|0.828| 0.985| 0.945|
 |Stage2: Cacophony (Ours)|0.970| 0.660| 0.593|0.833|0.680|0.762| 0.262|**0.191**| 0.420|0.726|0.850| 0.985|**0.970**|
-
 </center>
 
 ## Acknowledgements
+
+We are immensely grateful to the Google TPU Research Cloud (TRC) for generously providing the computational resources vital to our project. 
+Their support has been invaluable.
+
+
+We thank the FreeSound team from Pompeu Fabra University for providing us with the scraping API.
+We thank the University of Rochester Goergen Institute for Data Science (GIDS) seed funding program.
+We thank LAION CLAP team for collecting open source datesets and generously sharing them with the research community.

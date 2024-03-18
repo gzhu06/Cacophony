@@ -99,9 +99,7 @@ class VGGSoundProcessor(DatasetProcessor):
         synthetic_text_dict = {}
         
         # load audio filepaths
-        # existing_audiopaths = glob.glob(f'{self.config.data_dir}/{current_split}/*.wav')
-        # existing_audiopaths = glob.glob(f'{self.config.data_dir}/**/*.wav')
-        existing_audiopaths = glob.glob(f'{self.config.data_dir}/test/*.wav')
+        existing_audiopaths = glob.glob(f'{self.config.data_dir}/test/*.wav', recursive=True)
 
         # load meta json file
         vgg_meta_file = os.path.join(self.config.data_dir, 'vggsound_full.json')
