@@ -215,6 +215,7 @@ def audio_retrieval(dataprocessor, datasetconfig, eval_split='test'):
             
             audiowav = load_audio(filepaths[file_idx], dataprocessor.config.sampling_rate)
             batch, data_dict = prepare_audio_batch(audiowav, audio_description, datasetconfig)
+
             text_embedding = t_apply(batch, caco_params)
 
             # prepare for text embedding

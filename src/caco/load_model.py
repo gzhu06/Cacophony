@@ -15,9 +15,13 @@ def load_caco(ckpt_path, use_decoder=True):
     caco_state_dict = checkpoints.restore_checkpoint(ckpt_path, target=None)
     caco_params = caco_state_dict['0']['params']
 
-    print(count_params(caco_params['audio_module']), 
-          count_params(caco_params['decoder_module']), 
-          count_params(caco_params['text_module']))
+    print(count_params(caco_params['AudioEncoder_0'])/1e6, 
+          count_params(caco_params['AudioDecoder_0'])/1e6)
+    exit()
+
+    print(count_params(caco_params['audio_module'])/1e6, 
+          count_params(caco_params['decoder_module'])/1e6, 
+          count_params(caco_params['text_module'])/1e6)
 
     # text model configs
     text_module = RobertaModel(RobertaConfig())

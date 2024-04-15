@@ -18,18 +18,21 @@ pip install requirements.txt
 ```
 
 ## Pretrained Models
-We provide the following pretrained models on both stages of the Cacophony model:
+We provide the following pretrained models on both stages of the Cacophony model, folder [here](https://drive.google.com/drive/folders/1lZHJuClyn4FK_Fhn92ylQqyAd40uJv0Y?usp=sharing).
 ### Stage 1: AudioMAE
-[link](https://drive.google.com/), Model detail: 
+Model detail: 
+* Filename: AudioMAE.ckpt
 * Audio Encoder: parameters
 * Audio Decoder: parameters
-
+* File MD5: Verifing, to be uploaded soon
 
 ### Stage 2: Cacophony
-[link](https://drive.google.com/), Model detail:
-* Audio Encoder: parameters,
-* Text Encoder: parameters,
-
+ Model detail:
+* Filename: Cacophony.ckpt
+* Audio Encoder size: 85.26M
+* Text Encoder size: 125.23M
+* Text Decoder size: 76.46M
+* File MD5: bb6aa4b4e8e90ea3595021bf8233add0
 
 ## Evaluation Results
 
