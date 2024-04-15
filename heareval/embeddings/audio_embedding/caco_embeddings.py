@@ -15,7 +15,7 @@ import jax
 import flax
 import jax.numpy as jnp
 from einops import rearrange
-
+from src.caco.load_model import load_caco
 from src.caco.caco_eval_utils import compute_mel_spec_audiomae
 from src.caco.dataset import Batch, AudioMAEDatasetConfig, DatasetConfig, _dataset_process_map, _tokenize_and_numpy
 
@@ -58,19 +58,9 @@ class Embedding:
         self.batch_size = batch_size
 
         # load model
-        # load caco globally for test
-        if 'ast/' in model_path:
-            from src.caco.load_model import load_caco_ast
-            caco_model_dict = load_caco_ast(model_path)
-            dataconfig = AudioMAEDatasetConfig(audio_segment_len=int(audio_max_len*sample_rate), 
-                                               spec_hop_length=320, 
-                                               spec_window_length=800, 
-                                               spec_fft_size=1024)
-
-        else:
-            from src.caco.load_model import load_caco
-            caco_model_dict = load_caco(model_path)
-            dataconfig = AudioMAEDatasetConfig(audio_segment_len=int(audio_max_len*sample_rate))
+        
+        caco_model_dict = load_caco(model_path)
+        dataconfig = AudioMAEDatasetConfig(audio_segment_len=int(audio_max_len*sample_rate))
 
         self.dataconfig = dataconfig
         self.caco_params = flax.jax_utils.replicate(caco_model_dict['caco_params'], 
@@ -101,24 +91,8 @@ class Embedding:
                 normalize=True,
                 method=self.caco_model.get_audio_embedding,
             )
-        
-        def compute_audio_embedding_ast(audio_batch, model_params):
-            return self.caco_model.apply(
-                {'params': model_params},
-                audio_patches=audio_batch['audio_patches'],
-                audio_time_inds=audio_batch['audio_time_inds'],
-                audio_freq_inds=audio_batch['audio_freq_inds'],
-                audio_mask=audio_batch['audio_mask'],
-                is_train=False,
-                return_hidden_state=True,
-                normalize=True,
-                method=self.caco_model.get_audio_embedding,
-            )
 
-        if '/ast/' in model_path:
-            self.a_apply = jax.pmap(compute_audio_embedding_ast, axis_name='dp')
-        else:
-            self.a_apply = jax.pmap(compute_audio_embedding, axis_name='dp')
+        self.a_apply = jax.pmap(compute_audio_embedding, axis_name='dp')
 
     def get_embedding_as_numpy(self, audiofile, embedding_type=None) -> np.ndarray:
 
