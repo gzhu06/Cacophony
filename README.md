@@ -23,8 +23,8 @@ We provide the following pretrained models on both stages of the Cacophony model
 Model detail: 
 * Filename: AudioMAE.ckpt
 * Audio sampling rate: 16000
-* Audio Encoder: parameters
-* Audio Decoder: parameters
+* Audio Encoder: 85.26M
+* Audio Decoder: 85.85M
 * File MD5: 3a8a7778a5e2013ceb4a418e1504d3d8
 
 ### Stage 2: Cacophony
