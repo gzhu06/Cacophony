@@ -1,17 +1,14 @@
 export LD_LIBRARY_PATH=LD_LIBRARY_PATH:$CONDA_PREFIX/lib
 export PATH=/usr/local/cuda-11.2/bin:$PATH
 
+emb_name=/embeddings # cacophony or audiomae
 
-ckpt_root=/path/
-embed_save_path=/path/
-
-ckpt_filename=$1
-emb_name=$2
+ckpt_path=$1
+embed_save_path=$2
 task_data_root=$3
 task_file=$4
 gpu_idx=$5
 sample_rate=$6
-ckpt_path=${ckpt_root}/${ckpt_filename}
 
 n=1
 while read line; do

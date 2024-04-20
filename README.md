@@ -83,6 +83,10 @@ python eval_caco.py --task caption --model_path <path_to_model>
 
 Our environment does not support the HEAR benchmark, but we provide the code to run the benchmark in the `hear` directory. To successfully run the benchmark, follow the instructions in the `hear` directory.
 
+Please check the `run_hear_eval.sh` for details, example cmd:
+``` bash
+bash run_hear_eval.sh /path/to/AudioMAE.ckpt /path/to/embedding /path/to/hear ./tasklist/hear_all_tasks.txt 0 16000
+```
 
 #### *HEAR Benchmark Results
 To complement the radar chart in the paper, we present the accuracy numbers for the HEAR benchmark alongside those of other baseline models including [LAION-CLAP](https://arxiv.org/abs/2211.06687), [MS-CLAP](https://arxiv.org/abs/2206.04769), [WavCaps-CNN14](https://arxiv.org/abs/2303.17395), and [WavCaps-HTSAT](https://arxiv.org/abs/2303.17395).
