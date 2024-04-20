@@ -1,3 +1,4 @@
+nsynth_pitch-v2.2.3-50h
 vocal_imitation-v1.1.3-full
 vox_lingua_top10-hear2021-full
 gunshot_triangulation-v1.0-full
@@ -7,7 +8,6 @@ tfds_gtzan_music_speech-1.0.0-full
 esc50-v2.0.0-full
 libricount-v1.0.0-hear2021-full
 tfds_crema_d-1.0.0-full
-nsynth_pitch-v2.2.3-50h
 nsynth_pitch-v2.2.3-5h
 speech_commands-v0.0.2-5h
 speech_commands-v0.0.2-full

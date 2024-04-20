@@ -22,13 +22,15 @@ We provide the following pretrained models on both stages of the Cacophony model
 ### Stage 1: AudioMAE
 Model detail: 
 * Filename: AudioMAE.ckpt
+* Audio sampling rate: 16000
 * Audio Encoder: parameters
 * Audio Decoder: parameters
-* File MD5: Verifing, to be uploaded soon
+* File MD5: 3a8a7778a5e2013ceb4a418e1504d3d8
 
 ### Stage 2: Cacophony
  Model detail:
 * Filename: Cacophony.ckpt
+* Audio sampling rate: 16000
 * Audio Encoder size: 85.26M
 * Text Encoder size: 125.23M
 * Text Decoder size: 76.46M
@@ -94,7 +96,7 @@ To complement the radar chart in the paper, we present the accuracy numbers for 
 | [MS-CLAP](https://arxiv.org/abs/2206.04769) |0.930|0.649|0.547|0.798|0.511|0.626|0.236| 0.106|0.112|0.274| 0.818|**0.992**|0.932|
 |[WavCaps-CNN14](https://arxiv.org/abs/2303.17395)|0.962| 0.646| 0.556|0.789|0.583|0.640|0.270|0.158| 0.140|0.324|**0.861**| **0.992**|0.957|
 |[WavCaps-HTSAT](https://arxiv.org/abs/2303.17395)|0.961| 0.690| 0.595| **0.929**| 0.752|0.806|0.234| 0.168| 0.256| 0.548|0.847| 0.962| 0.958|
-|Stage1: AudioMAE (Ours)|0.841| **0.754**|**0.661**| 0.893| **0.841**|**0.893**| **0.439**| 0.161| **0.700**|**0.827**|0.828| 0.985| 0.945|
+|Stage1: AudioMAE (Ours)|0.870| **0.778**|**0.697**| 0.940| **0.886**|**0.922**| **0.488**| 0.179| **0.720**|**0.842**|0.838| 0.969| 0.953|
 |Stage2: Cacophony (Ours)|0.970| 0.660| 0.593|0.833|0.680|0.762| 0.262|**0.191**| 0.420|0.726|0.850| 0.985|**0.970**|
 </center>
 
