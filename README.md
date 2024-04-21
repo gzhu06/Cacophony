@@ -67,7 +67,7 @@ python eval_caco.py --task zs --model_path <path_to_model>
 ```
 <center>
 
-| UrbanSound8K| ESC-50|TUTAS2017 |VGGSound-test| 
+|ESC-50 | UrbanSound8K|TUTAS2017 |VGGSound-test| 
 |:------:|:------:|:-----:|:------:|
 |0.934| 0.771| 0.486|0.271|
 
