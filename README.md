@@ -10,6 +10,18 @@ Despite recent advancements in audio-text modeling, audio-text contrastive model
 </p>
 <br>
 
+## Acknowledgement
+
+```
+@article{zhu2024cacophony,
+  title={Cacophony: An Improved Contrastive Audio-Text Model},
+  author={Ge Zhu and Zhiyao Duan},
+  journal={IEEE/ACM Transactions on Audio, Speech, and Language Processing},
+  year={2024},
+  volume={abs/2402.06986},
+}
+```
+
 ## Requirements
 Jax and Flax are used for the model implementation. Tested on RTX 2080Ti, CUDA version 11.5, cuDNN version 8.2.1, cudatoolkit 11.3.1, and Python 3.8.17.
 
@@ -114,4 +126,3 @@ We thank the FreeSound team from Pompeu Fabra University for providing us with t
 We thank the University of Rochester Goergen Institute for Data Science (GIDS) seed funding program.
 We thank LAION CLAP team for collecting open source datesets and generously sharing them with the research community.
 
-## References
