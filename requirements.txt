@@ -3,7 +3,6 @@ astropy==5.2.1
 astunparse==1.6.3
 cached-property==1.5.2
 cachetools==5.3.0
-certifi @ file:///croot/certifi_1671487769961/work/certifi
 cffi==1.15.1
 charset-normalizer==3.1.0
 chex==0.1.7
@@ -29,7 +28,6 @@ importlib-metadata==6.1.0
 importlib-resources==5.12.0
 intervaltree==3.1.0
 jax==0.4.7
-jaxlib==0.4.7+cuda11.cudnn82
 joblib==1.2.0
 keras==2.11.0
 kiwisolver==1.4.4
@@ -88,3 +86,5 @@ urllib3==1.26.15
 Werkzeug==2.2.3
 wrapt==1.15.0
 zipp==3.15.0
+-f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+jaxlib==0.4.7+cuda11.cudnn82

@@ -295,7 +295,7 @@ def decode(
     bos_id: int,
     eos_id: int,
     pad_id: int,
-    rng: jax.random.KeyArray
+    rng: jax.Array
 ) -> jnp.ndarray:
 
     def _cond_fn(val):

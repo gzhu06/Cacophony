@@ -57,7 +57,7 @@ The evaluation datasets involves [HEAR benchmark](https://hearbenchmark.com/) [A
 We evaluate the model performance Audio-Text retrieval task using the [AudioCaps](https://audiocaps.github.io/) dataset and [Clotho](https://github.com/audio-captioning/clotho-dataset) dataset.
 
 ```bash
-python eval_caco.py --task ar --model_path <path_to_model>
+python eval_caco.py --task ar --ckpt_path <path_to_model>
 ```
 
 Reproducible results for the Audio-Text retrieval task are as follows:

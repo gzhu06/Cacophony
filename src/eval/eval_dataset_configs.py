@@ -12,7 +12,7 @@ class AudioCaps16kConfig:
         
 @dataclass
 class Clotho16kConfig:
-    data_dir: str = '/storageHDD/ge/audio_sfx_wav/clothov2'
+    data_dir: str = '/home/gzhu/Documents/github/Cacophony/dataset/clotho_audio_evaluation_16k'
     sampling_rate: int = 16000
 
 @dataclass

@@ -82,7 +82,6 @@ def get_train_input(
     )
     return batch
 
-@tf.function
 def load_audio(audio_path, dataset_sampling_rate):
     audiowav, _ = sf.read(audio_path)
     audiowav = audiowav.astype(np.float32)
@@ -115,7 +114,7 @@ def _decode_helper(
     temperature: float,
     audio_batch: PyTreeDef,
     params: PyTreeDef,
-    rng: jax.random.KeyArray
+    rng: jax.Array
 ) -> jnp.ndarray:
 
     decoded_tokens = decode(
@@ -197,23 +196,25 @@ def audio_retrieval(dataprocessor, datasetconfig, eval_split='test'):
     filepaths, descriptions, _ = dataprocessor.get_filepaths_and_descriptions(current_split=eval_split)
 
     dataset_len = len(filepaths)
-    
+
     all_text = []
     all_text_embeddings = []
     all_audio = []
     all_audio_embeddings = []
     gt_audio_text = {}
     gt_text_audio = {}
-    
+
     for file_idx in tqdm(range(dataset_len)):
         audio_name = filepaths[file_idx].split('/')[-1].split('.wav')[0]
         gt_audio_text[audio_name] = []
 
+        # Load audio ONCE per file (moved outside inner loop to avoid redundant loading)
+        audiowav = load_audio(filepaths[file_idx], dataprocessor.config.sampling_rate)
+
         # get text embeddings
         audio_descriptions = descriptions[audio_name]['description']
         for audio_description in audio_descriptions:
-            
-            audiowav = load_audio(filepaths[file_idx], dataprocessor.config.sampling_rate)
+
             batch, data_dict = prepare_audio_batch(audiowav, audio_description, datasetconfig)
 
             text_embedding = t_apply(batch, caco_params)
@@ -370,17 +371,17 @@ if __name__ == "__main__":
         clothov2processor = Clotho16kProcessor()
         audio_retrieval(clothov2processor, CommondataConfig, 'evaluation')
 
-        audio_seg_time = 10
-        total_samples = 16000 * audio_seg_time
-        max_patches = (total_samples * 8 // 160 // 16) 
-        ACdataConfig = DatasetConfig(batch_size=1,
-                                     patches_seq_len=max_patches,
-                                     time_patch_size=16,
-                                     freq_patch_size=16,
-                                     max_text_len=77,
-                                     synthetic_prob=0.8)
-        audiocapsprocessor = AudioCaps16kProcessor()
-        audio_retrieval(audiocapsprocessor, ACdataConfig, 'test')
+        # audio_seg_time = 10
+        # total_samples = 16000 * audio_seg_time
+        # max_patches = (total_samples * 8 // 160 // 16) 
+        # ACdataConfig = DatasetConfig(batch_size=1,
+        #                              patches_seq_len=max_patches,
+        #                              time_patch_size=16,
+        #                              freq_patch_size=16,
+        #                              max_text_len=77,
+        #                              synthetic_prob=0.8)
+        # audiocapsprocessor = AudioCaps16kProcessor()
+        # audio_retrieval(audiocapsprocessor, ACdataConfig, 'test')
 
     elif args.task == 'caption':
 
