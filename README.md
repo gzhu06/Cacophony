@@ -24,10 +24,15 @@ Despite recent advancements in audio-text modeling, audio-text contrastive model
 ```
 
 ## Requirements
-Jax and Flax are used for the model implementation. Tested on RTX 2080Ti, CUDA version 11.5, cuDNN version 8.2.1, cudatoolkit 11.3.1, and Python 3.8.17.
+
+### Jax model
+Jax and Flax are used for the model implementation. 
 
 ```bash
-pip install requirements.txt
+conda create --name jax_caco python=3.10
+conda install -c nvidia cuda-toolkit=11.8
+pip install -r ./requirements.txt 
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
 ```
 
 ## Pretrained Models
@@ -51,7 +56,7 @@ Model detail:
 
 ## Evaluation Results
 
-To be updated with torch model weights, results on jax model weights can be found [here](./src/eval/EVAL.md).
+To be updated with torch model weights, results on jax model weights can be found [here](./src/eval/README.md).
 
 ## Acknowledgements
 
