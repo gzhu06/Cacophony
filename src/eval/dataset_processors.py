@@ -4,7 +4,7 @@ from tqdm import tqdm
 import os, csv, glob, json
 import pandas as pd
 from dataclasses import dataclass
-from eval_dataset_configs import VGGSoundConfig, TUTAS2017Config, \
+from .eval_dataset_configs import VGGSoundConfig, TUTAS2017Config, \
     ESC50Config, US8KConfig, AudioCaps16kConfig, Clotho16kConfig
 
 @dataclass

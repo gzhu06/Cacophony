@@ -16,19 +16,6 @@ class CACOConfig:
     use_decoder: bool
     projection_size: Optional[int] = None
 
-@struct.dataclass
-class LossConfig:
-    decoder_weight: Optional[float] = None
-    decoder_label_smoothing: Optional[float] = None
-
-
-@struct.dataclass
-class TrainMetrics:
-    loss: jnp.ndarray
-    contrastive_loss: jnp.ndarray
-    decoder_loss: Optional[jnp.ndarray] = None
-
-
 class AttentionPooler(nn.Module):
     caco_config: CACOConfig
 
@@ -69,11 +56,10 @@ class AttentionPooler(nn.Module):
 class CACO(nn.Module):
 
     caco_config: CACOConfig
-    loss_config: LossConfig
     audio_module: nn.Module
     text_module: nn.Module
     decoder_module: Optional[nn.Module]
-    
+
     def setup(self):
         self.logit_scale = self.param('logit_scale', lambda _: jnp.array(self.caco_config.logit_scale_init_value))
         proj_size = self.caco_config.projection_size
@@ -82,94 +68,6 @@ class CACO(nn.Module):
             dtype=self.caco_config.dtype
         )
         self.audio_attention_pool = AttentionPooler(self.caco_config)
-
-    def __call__(
-        self,
-        audio_patches: jnp.ndarray,
-        audio_time_inds: jnp.ndarray,
-        audio_freq_inds: jnp.ndarray,
-        audio_mask: jnp.ndarray,
-        text_input_ids: jnp.ndarray,
-        text_mask: jnp.ndarray,
-        deterministic: bool = False
-    ) -> Tuple[jnp.ndarray, TrainMetrics]:
-
-        audio_hidden_state = self.audio_module(
-            x=audio_patches,
-            time_inds=audio_time_inds,
-            freq_inds=audio_freq_inds,
-            mask=audio_mask,
-            deterministic=deterministic
-        )
-        audio_embedding = self.audio_attention_pool(audio_hidden_state, audio_mask)
-
-        text_embedding, text_hidden_state = self.text_module(
-            input_ids=text_input_ids,
-            attention_mask=text_mask,
-            is_train=not deterministic
-        )
-
-        if self.caco_config.projection_size is None:
-            assert audio_embedding.shape[-1] != text_embedding.shape[-1]
-        else:
-            text_embedding = self.text_proj(text_embedding)
-
-        audio_embedding = audio_embedding / jnp.linalg.norm(audio_embedding + NORM_EPS, axis=-1, keepdims=True) # TODO(jd)?? check
-        text_embedding = text_embedding / jnp.linalg.norm(text_embedding + NORM_EPS, axis=-1, keepdims=True)
-
-        all_audio_embeddings = jax.lax.all_gather(audio_embedding, axis_name='dp', tiled=False) # vjp not implemented for tiled=True in current jax version
-        all_text_embeddings = jax.lax.all_gather(text_embedding, axis_name='dp', tiled=False)
-        all_audio_embeddings = rearrange(all_audio_embeddings, 'd b ... -> (d b) ...')
-        all_text_embeddings = rearrange(all_text_embeddings, 'd b ... -> (d b) ...')
-
-        at_logits = jnp.exp(self.logit_scale) * audio_embedding @ all_text_embeddings.T
-        ta_logits = jnp.exp(self.logit_scale) * text_embedding @ all_audio_embeddings.T
-
-        offset = jax.lax.axis_index('dp') * len(at_logits)
-
-        contrastive_at_loss = -jnp.mean(jnp.diag(
-            jax.lax.dynamic_slice_in_dim(jax.nn.log_softmax(at_logits, axis=-1), offset, len(at_logits), axis=-1)
-        ), axis=-1)
-
-        contrastive_ta_loss = -jnp.mean(jnp.diag(
-            jax.lax.dynamic_slice_in_dim(jax.nn.log_softmax(ta_logits, axis=-1), offset, len(at_logits), axis=-1)
-        ), axis=-1)
-        
-        contrastive_loss = contrastive_at_loss + contrastive_ta_loss
-
-        total_loss = contrastive_loss
-
-        if self.caco_config.use_decoder and self.decoder_module is not None:
-            
-            decoder_logits = self.decoder_module(
-                text_hidden_state=text_hidden_state,
-                attention_mask=text_mask,
-                audio_hidden_state=audio_hidden_state,
-                audio_mask=audio_mask,
-                is_train=not deterministic
-            )[..., :-1, :]
-
-            decoder_target = text_input_ids[..., 1:]
-
-            label_smoothing = self.loss_config.decoder_label_smoothing
-            if label_smoothing is not None and label_smoothing > 0:   
-                onehot_targets = jax.nn.one_hot(decoder_target, decoder_logits.shape[-1], dtype=jnp.float32)
-                onehot_targets = onehot_targets * (1. - label_smoothing) + label_smoothing / decoder_logits.shape[-1]
-                decoder_losses = jnp.sum(onehot_targets * jax.nn.log_softmax(decoder_logits, axis=-1), axis=-1)
-            else:
-                decoder_losses = jnp.take_along_axis(jax.nn.log_softmax(decoder_logits, axis=-1), indices=decoder_target[..., None], axis=-1)[..., 0]
-
-            decoder_loss = -jnp.mean(decoder_losses * text_mask[..., 1:]) # TODO(jd)
-
-            total_loss = total_loss + decoder_loss
-
-        metrics = TrainMetrics(
-            loss=total_loss,
-            contrastive_loss=contrastive_loss,
-            decoder_loss=decoder_loss if self.caco_config.use_decoder else None,
-        )
-
-        return total_loss, metrics
 
     def get_audio_embedding(
         self,
@@ -223,39 +121,6 @@ class CACO(nn.Module):
         if return_hidden_state:
             return (text_embedding, text_hidden_state)
         return text_embedding
-
-        
-    def get_contrastive_logits(
-        self,
-        audio_patches: jnp.ndarray,
-        audio_time_inds: jnp.ndarray,
-        audio_freq_inds: jnp.ndarray,
-        audio_mask: jnp.ndarray,
-        text_input_ids: jnp.ndarray,
-        text_mask: jnp.ndarray,
-        deterministic: bool = False
-    ) -> Tuple[jnp.ndarray, jnp.ndarray]: # TODO(jd) figure out best way 
-    
-        audio_embedding = self.get_audio_embedding(
-            audio_patches=audio_patches,
-            audio_time_inds=audio_time_inds,
-            audio_freq_inds=audio_freq_inds,
-            audio_mask=audio_mask,
-            deterministic=deterministic,
-            return_hidden_state=False,
-            normalize=True
-        )
-        text_embedding = self.get_text_embedding(
-            text_input_ids=text_input_ids,
-            text_mask=text_mask,
-            deterministic=deterministic,
-            return_hidden_state=False,
-            normalize=True
-        )
-        at_logits = jnp.exp(self.logit_scale) * audio_embedding @ text_embedding.T
-        ta_logits = jnp.exp(self.logit_scale) * text_embedding @ audio_embedding.T
-        return at_logits, ta_logits
-
 
     def get_next_decoder_logits(
         self,

@@ -15,8 +15,8 @@ from src.caco.caco import CACO, decode
 from src.caco.dataset import Batch, DatasetConfig, _dataset_process_map, _tokenize_and_numpy
 from src.caco.caco_eval_utils import load_from_list
 
-from retrieval_utils import compute_retrieval_metric
-from dataset_processors import *
+from .retrieval_utils import compute_retrieval_metric
+from .dataset_processors import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--ckpt_path', type=str, default='./ckpt.pt', help='model ckpt path')
@@ -385,18 +385,6 @@ if __name__ == "__main__":
 
     elif args.task == 'caption':
 
-        audio_seg_time = 10
-        total_samples = 16000 * audio_seg_time
-        max_patches = (total_samples // 160 // 16) * 8
-        ACdataConfig = DatasetConfig(batch_size=1,
-                                     patches_seq_len=max_patches,
-                                     time_patch_size=16,
-                                     freq_patch_size=16,
-                                     max_text_len=100,
-                                     synthetic_prob=0.8)
-        audiocapsprocessor = AudioCaps16kProcessor()
-        audio_captioning(audiocapsprocessor, ACdataConfig, 'test')
-
         audio_seg_time = 30
         total_samples = 16000 * audio_seg_time
         max_patches = (total_samples * 8 // 160 // 16) 
@@ -409,3 +397,16 @@ if __name__ == "__main__":
 
         clothov2processor = Clotho16kProcessor()
         audio_captioning(clothov2processor, CommondataConfig, 'evaluation')
+
+        # audio_seg_time = 10
+        # total_samples = 16000 * audio_seg_time
+        # max_patches = (total_samples // 160 // 16) * 8
+        # ACdataConfig = DatasetConfig(batch_size=1,
+        #                              patches_seq_len=max_patches,
+        #                              time_patch_size=16,
+        #                              freq_patch_size=16,
+        #                              max_text_len=100,
+        #                              synthetic_prob=0.8)
+        # audiocapsprocessor = AudioCaps16kProcessor()
+        # audio_captioning(audiocapsprocessor, ACdataConfig, 'test')
+

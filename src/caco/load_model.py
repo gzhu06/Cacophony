@@ -4,7 +4,7 @@ from .text_models.roberta_text_model import RobertaConfig, RobertaModel, Roberta
 from .audio_models.mae import AudioEncoder, AudioTransformerConfig
 from transformers import RobertaTokenizerFast
 import jax
-from .caco import CACO, CACOConfig, LossConfig
+from .caco import CACO, CACOConfig
 
 def count_params(params) -> int:
     return jax.tree_util.tree_reduce(lambda x, y: x + y.size, params, initializer=0)
@@ -48,16 +48,9 @@ def load_caco(ckpt_path, use_decoder=True):
         projection_size=768,
     )
 
-    # loss module config
-    loss_config = LossConfig(
-        decoder_weight=1.0,
-        decoder_label_smoothing=0.0,
-    )
-
     # caco model config
     caco_model = CACO(
         caco_config=caco_config,
-        loss_config=loss_config,
         audio_module=audio_module,
         text_module=text_module,
         decoder_module=decoder_module,
