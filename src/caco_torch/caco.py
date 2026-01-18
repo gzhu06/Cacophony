@@ -261,9 +261,7 @@ class CACO(nn.Module):
         )
 
 
-def create_caco_model(
-    use_decoder: bool = True
-) -> CACO:
+def create_caco_model() -> CACO:
     """Create a CACO model with default configuration matching the checkpoint."""
     audio_config = AudioTransformerConfig(
         hidden_size=768,
@@ -297,21 +295,19 @@ def create_caco_model(
         logit_scale_init_value=2.6592
     )
 
-    decoder_config = None
-    if use_decoder:
-        decoder_config = RobertaConfig(
-            vocab_size=50265,
-            hidden_size=768,
-            num_hidden_layers=4,  # Decoder has 4 layers
-            num_attention_heads=12,
-            intermediate_size=3072,
-            hidden_dropout_prob=0.1,
-            attention_probs_dropout_prob=0.1,
-            max_position_embeddings=514,
-            type_vocab_size=1,
-            layer_norm_eps=1e-5,
-            pad_token_id=1
-        )
+    decoder_config = RobertaConfig(
+        vocab_size=50265,
+        hidden_size=768,
+        num_hidden_layers=4,  # Decoder has 4 layers
+        num_attention_heads=12,
+        intermediate_size=3072,
+        hidden_dropout_prob=0.1,
+        attention_probs_dropout_prob=0.1,
+        max_position_embeddings=514,
+        type_vocab_size=1,
+        layer_norm_eps=1e-5,
+        pad_token_id=1
+    )
 
     return CACO(
         audio_config=audio_config,

@@ -28,7 +28,7 @@ Reproducible results for the Audio-Text retrieval task are as follows:
 We evaluate the model performance on the zero-shot classification task using the [UrbanSound8K](https://urbansounddataset.weebly.com/urbansound8k.html), [ESC-50](https://github.com/karolpiczak/ESC-50),[TUT Acoustic Scene 2017](https://zenodo.org/records/400515) and [VGGSound-test](https://www.robots.ox.ac.uk/~vgg/data/vggsound/) datasets. Note that, upon our evaluation, we found that some of the audio from the VGGSound-test dataset is not publicly available anymore, and we were unable to evaluate our model on the full dataset. Instead we evaluate on 12,722 samples.
 
 ```bash
-python eval_caco.py --task zs --model_path <path_to_model>
+python -m src.eval.eval_caco --task zs --model_path <path_to_model>
 ```
 <center>
 

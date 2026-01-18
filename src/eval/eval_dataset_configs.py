@@ -22,7 +22,7 @@ class TUTAS2017Config:
 
 @dataclass
 class ESC50Config:
-    data_dir: str = '/storageHDD/ge/audio_sfx_raw/esc50/ESC-50-master'
+    data_dir: str = 'dataset/ESC-50-master'
     sampling_rate: int = 44100
 
 @dataclass
