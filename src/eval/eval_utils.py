@@ -1,5 +1,19 @@
 import numpy as np
 from astropy.stats import jackknife
+import soundfile as sf
+import scipy
+
+def load_audio(audio_path, dataset_sampling_rate):
+    audiowav, _ = sf.read(audio_path)
+    audiowav = audiowav.astype(np.float32)
+    if len(audiowav.shape) > 1:
+        audiowav = np.mean(audiowav, axis=-1)
+
+    if dataset_sampling_rate != 16000:
+        new_num_samples = round(audiowav.shape[-1]*float(16000)/dataset_sampling_rate)
+        audiowav = scipy.signal.resample(audiowav, new_num_samples)
+
+    return audiowav
 
 def compute_retrieval_metric(indices, 
                              all_querys, all_keys, 

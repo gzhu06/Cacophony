@@ -13,12 +13,10 @@ from typing import Dict, List, Tuple, Any, Optional
 from dataclasses import dataclass
 
 from tqdm import tqdm
-import soundfile as sf
-import scipy.signal
 
 from src.caco_torch.caco import create_caco_model, CACO
 
-from .retrieval_utils import compute_retrieval_metric
+from .eval_utils import compute_retrieval_metric, load_audio
 from .dataset_processors import (
     ESC50Processor,
     US8KProcessor,
@@ -123,24 +121,6 @@ def spectrogram_to_patches(
         'audio_freq_inds': freq_inds.astype(np.float32),
         'audio_mask': mask.astype(np.float32)
     }
-
-
-def load_audio(audio_path: str, target_sr: int = 16000) -> torch.Tensor:
-    """Load audio file and resample to target sample rate, matching JAX implementation."""
-    # Use soundfile to match JAX implementation
-    audio, sr = sf.read(audio_path)
-    audio = audio.astype(np.float32)
-
-    # Convert to mono if stereo
-    if len(audio.shape) > 1:
-        audio = np.mean(audio, axis=-1)
-
-    # Resample using scipy to match JAX
-    if sr != target_sr:
-        new_num_samples = round(len(audio) * float(target_sr) / sr)
-        audio = scipy.signal.resample(audio, new_num_samples).astype(np.float32)
-
-    return torch.from_numpy(audio).unsqueeze(0)
 
 
 def load_caco_torch(ckpt_path: str, device: torch.device) -> Dict[str, Any]:
@@ -311,6 +291,7 @@ def zs_classification(
 
         # Load and process audio
         audiowav = load_audio(filepaths[file_idx], dataprocessor.config.sampling_rate)
+        audiowav = torch.from_numpy(audiowav).unsqueeze(0)
         audio_batch = prepare_audio_batch(audiowav, datasetconfig, device)
 
         # Get audio embedding
@@ -357,6 +338,7 @@ def audio_retrieval(
 
         # Load audio once per file
         audiowav = load_audio(filepaths[file_idx], dataprocessor.config.sampling_rate)
+        audiowav = torch.from_numpy(audiowav).unsqueeze(0)
         audio_batch = prepare_audio_batch(audiowav, datasetconfig, device)
 
         # Get text embeddings for all captions
@@ -489,6 +471,7 @@ def audio_captioning(
 
         # Load and process audio
         audiowav = load_audio(filepaths[file_idx], dataprocessor.config.sampling_rate)
+        audiowav = torch.from_numpy(audiowav).unsqueeze(0)
         audio_batch = prepare_audio_batch(audiowav, datasetconfig, device)
 
         # Generate caption

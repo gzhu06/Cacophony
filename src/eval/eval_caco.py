@@ -2,12 +2,10 @@ import jax, flax
 import jax.numpy as jnp
 import tensorflow as tf
 from einops import rearrange
-import scipy
 import argparse, os
 from functools import partial
 from typing import Any
 from tqdm import tqdm
-import soundfile as sf
 import numpy as np
 
 from src.caco.load_model import load_caco
@@ -15,7 +13,7 @@ from src.caco.caco import CACO, decode
 from src.caco.dataset import Batch, DatasetConfig, _dataset_process_map, _tokenize_and_numpy
 from src.caco.caco_eval_utils import load_from_list
 
-from .retrieval_utils import compute_retrieval_metric
+from .eval_utils import compute_retrieval_metric, load_audio
 from .dataset_processors import *
 
 parser = argparse.ArgumentParser()
@@ -82,17 +80,7 @@ def get_train_input(
     )
     return batch
 
-def load_audio(audio_path, dataset_sampling_rate):
-    audiowav, _ = sf.read(audio_path)
-    audiowav = audiowav.astype(np.float32)
-    if len(audiowav.shape) > 1:
-        audiowav = np.mean(audiowav, axis=-1)
 
-    if dataset_sampling_rate != 16000:
-        new_num_samples = round(audiowav.shape[-1]*float(16000)/dataset_sampling_rate)
-        audiowav = scipy.signal.resample(audiowav, new_num_samples)
-
-    return audiowav
 
 def prepare_audio_batch(audiowav, audio_description, datasetconfig):
 

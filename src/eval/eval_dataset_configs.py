@@ -15,6 +15,12 @@ class Clotho16kConfig:
     data_dir: str = '/home/gzhu/Documents/github/Cacophony/dataset/clotho_audio_evaluation_16k'
     sampling_rate: int = 16000
 
+
+@dataclass
+class ClothoConfig:
+    data_dir: str = '/home/gzhu/Documents/github/Cacophony/dataset/clotho_audio_evaluation'
+    sampling_rate: int = 44100
+
 @dataclass
 class TUTAS2017Config:
     data_dir: str = '/storageNVME/ge/TUT_Acoustic_scenes_2017'
