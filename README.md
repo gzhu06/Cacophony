@@ -25,13 +25,28 @@ Despite recent advancements in audio-text modeling, audio-text contrastive model
 
 ## Requirements
 
+### Torch model
+uv can be used
+```bash
+# create env
+uv venv caco --python 3.10
+uv pip install -r requirements_torch.txt
+
+# use env
+source ~/caco/bin/activate
+```
+
 ### Jax model
 Jax and Flax are used for the model implementation. 
 
 ```bash
+# create env
 conda create --name jax_caco python=3.10
 conda install -c nvidia cuda-toolkit=11.8
 pip install -r ./requirements.txt 
+
+# use env
+conda activate jax_caco
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
 ```
 
