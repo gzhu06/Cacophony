@@ -43,7 +43,7 @@ Jax and Flax are used for the model implementation.
 # create env
 conda create --name jax_caco python=3.10
 conda install -c nvidia cuda-toolkit=11.8
-pip install -r ./requirements.txt 
+pip install -r ./requirements_jax.txt 
 
 # use env
 conda activate jax_caco

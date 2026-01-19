@@ -21,6 +21,8 @@ Reproducible results for the Audio-Text retrieval task are as follows:
 | |R@1|R@5|R@10|R@1|R@5|R@10|
 |AudioCaps |0.410| 0.753| 0.864|0.553|0.836|0.924|
 |Clotho|0.202| 0.459| 0.588|0.265|0.541|0.762|
+|Clotho (Updated)|0.200| 0.463| 0.582|0.261|0.533|0.661|
+|Clotho (Torch)|0.186| 0.423| 0.551|0.258|0.511|0.650|
 
 </center>
 
@@ -32,9 +34,14 @@ python -m src.eval.eval_caco --task zs --model_path <path_to_model>
 ```
 <center>
 
-|ESC-50 | UrbanSound8K|TUTAS2017 |VGGSound-test| 
-|:------:|:------:|:-----:|:------:|
-|0.934| 0.771| 0.486|0.271|
+#### Jax checkpoint
+|ESC-50 | ESC-50 (Torch) |UrbanSound8K|TUTAS2017 |VGGSound-test| 
+|:------:|:------:|:-----:|:------:|:------:|
+|0.934| 0.925|0.771| 0.486|0.271|
+
+#### Torch checkpoint
+
+
 
 </center>
 
